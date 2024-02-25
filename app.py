@@ -83,18 +83,18 @@ def evaluate_okr(objective, key_results):
         for reason in feedback:
             st.write(f"- {reason}")
 
-        # Graficar los resultados en un gráfico de donas
-        plot_results(okr_pass, feedback)
+    # Mostrar el gráfico
+    plot_results(okr_pass)
 
-def plot_results(okr_pass, feedback):
-    # Contar el número de puntos que cumplen y los que no
-    num_pass = sum(1 for reason in feedback if "cumple" in reason.lower())
-    num_fail = len(feedback) - num_pass
+def plot_results(okr_pass):
+    # Contar el número de puntos que cumplen y no cumplen
+    num_pass = sum(okr_pass)
+    num_fail = len(okr_pass) - num_pass
 
-    # Configurar los datos para el gráfico
+    # Configurar datos para el gráfico
     labels = ['Cumple', 'No Cumple']
     sizes = [num_pass, num_fail]
-    colors = ['limegreen', 'red']
+    colors = ['#2ecc71', '#e74c3c']
 
     # Crear el gráfico de donas
     fig, ax = plt.subplots()
