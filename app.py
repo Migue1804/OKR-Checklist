@@ -59,16 +59,7 @@ def evaluate_okr(objective, key_results):
         st.write("El OKR no está bien definido. Motivos:")
         for idx, question in enumerate(okr_questions):
             if not okr_pass[idx]:
-                if idx < 4:
-                    st.write(f"- {question}: {eval(f'objective_{question.lower().replace(' ', '_')}_comment')}")
-                elif 4 <= idx < 8:
-                    st.write(f"- {question}: {eval(f'key_results_{question.lower().replace(' ', '_')}_comment')}")
-                elif idx == 8:
-                    st.write(f"- {question}: {cascading_okrs_comment}")
-                elif idx == 9:
-                    st.write(f"- {question}: {okrs_aligned_comment}")
-                elif idx == 10:
-                    st.write(f"- {question}: {okrs_consistent_comment}")
+                st.write(f"- {question}")
 
     # Mostrar el gráfico
     plot_results(okr_pass)
@@ -93,8 +84,7 @@ def plot_results(okr_pass):
 
 def main():
     # Agregar una imagen en la parte superior
-    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesario
-    st.title("App de Evaluación de OKRs")
+    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesariost.title("App de Evaluación de OKRs")
     # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
     key_results = st.text_area("Resultados Clave (separa con saltos de línea):")
