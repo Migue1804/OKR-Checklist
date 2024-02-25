@@ -72,7 +72,8 @@ def plot_results(okr_pass):
     st.pyplot(fig)
 
 def main():
-    st.title("App de Evaluación de OKRs")
+    # Agregar una imagen en la parte superior
+    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesariost.title("App de Evaluación de OKRs")
     # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
     key_results = st.text_area("Resultados Clave (separa con saltos de línea):")
