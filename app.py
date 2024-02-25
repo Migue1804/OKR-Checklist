@@ -7,38 +7,49 @@ def evaluate_okr(objective, key_results):
     # Evaluar preguntas sobre el objetivo
     objective_clear = st.radio("¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?", ("Sí", "No"))
     okr_pass.append(objective_clear == "Sí")
+    objective_clear_comment = st.text_area("Comentarios adicionales:", key="objective_clear_comment")
 
     objective_ambitious = st.radio("¿El objetivo es ambicioso pero alcanzable?", ("Sí", "No"))
     okr_pass.append(objective_ambitious == "Sí")
+    objective_ambitious_comment = st.text_area("Comentarios adicionales:", key="objective_ambitious_comment")
 
     objective_relevant = st.radio("¿El objetivo es relevante y significativo para el éxito de la organización?", ("Sí", "No"))
     okr_pass.append(objective_relevant == "Sí")
+    objective_relevant_comment = st.text_area("Comentarios adicionales:", key="objective_relevant_comment")
 
     objective_understandable = st.radio("¿El objetivo es comprensible y motivador para los equipos?", ("Sí", "No"))
     okr_pass.append(objective_understandable == "Sí")
+    objective_understandable_comment = st.text_area("Comentarios adicionales:", key="objective_understandable_comment")
 
     # Evaluar preguntas sobre los resultados clave
     key_results_specific = st.radio("¿Los resultados clave son específicos y medibles?", ("Sí", "No"))
     okr_pass.append(key_results_specific == "Sí")
+    key_results_specific_comment = st.text_area("Comentarios adicionales:", key="key_results_specific_comment")
 
     key_results_clear_progress = st.radio("¿Los resultados clave proporcionan una indicación clara de progreso hacia el logro del objetivo?", ("Sí", "No"))
     okr_pass.append(key_results_clear_progress == "Sí")
+    key_results_clear_progress_comment = st.text_area("Comentarios adicionales:", key="key_results_clear_progress_comment")
 
     key_results_realistic = st.radio("¿Los resultados clave son realistas y factibles dentro del marco de tiempo establecido?", ("Sí", "No"))
     okr_pass.append(key_results_realistic == "Sí")
+    key_results_realistic_comment = st.text_area("Comentarios adicionales:", key="key_results_realistic_comment")
 
     key_results_relevant = st.radio("¿Los resultados clave son relevantes para el objetivo y contribuyen significativamente a su logro?", ("Sí", "No"))
     okr_pass.append(key_results_relevant == "Sí")
+    key_results_relevant_comment = st.text_area("Comentarios adicionales:", key="key_results_relevant_comment")
 
     # Evaluar preguntas sobre la cascada de OKRs
     cascading_okrs = st.radio("¿El OKR está desglosado en OKRs específicos y medibles para cada equipo o departamento?", ("Sí", "No"))
     okr_pass.append(cascading_okrs == "Sí")
+    cascading_okrs_comment = st.text_area("Comentarios adicionales:", key="cascading_okrs_comment")
 
     okrs_aligned = st.radio("¿Los OKRs de los equipos están alineados con los objetivos estratégicos de nivel superior?", ("Sí", "No"))
     okr_pass.append(okrs_aligned == "Sí")
+    okrs_aligned_comment = st.text_area("Comentarios adicionales:", key="okrs_aligned_comment")
 
     okrs_consistent = st.radio("¿Existe coherencia y consistencia en la cascada de OKRs a través de la organización?", ("Sí", "No"))
     okr_pass.append(okrs_consistent == "Sí")
+    okrs_consistent_comment = st.text_area("Comentarios adicionales:", key="okrs_consistent_comment")
 
     # Concluir evaluación del OKR
     st.write("Resultado de la evaluación del OKR:")
@@ -72,8 +83,7 @@ def plot_results(okr_pass):
     st.pyplot(fig)
 
 def main():
-    # Agregar una imagen en la parte superior
-    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesariost.title("App de Evaluación de OKRs")
+    st.title("App de Evaluación de OKRs")
     # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
     key_results = st.text_area("Resultados Clave (separa con saltos de línea):")
@@ -98,4 +108,3 @@ okr_questions = [
 
 if __name__ == "__main__":
     main()
-
