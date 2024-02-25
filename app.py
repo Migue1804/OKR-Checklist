@@ -7,69 +7,69 @@ def evaluate_okr(objective, key_results):
 
     # Evaluar preguntas sobre el objetivo
     objective_clear = st.radio("¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?", ("Sí", "No"))
-    objective_clear_comment = st.text_area("Comentarios adicionales:")
+    objective_clear_comment = st.text_area("Comentarios adicionales (opcional):", key="objective_clear_comment")
     if objective_clear == "No":
         okr_pass = False
         feedback.append(f"El objetivo no está claramente definido y alineado con la visión estratégica de la organización. {objective_clear_comment}")
 
     objective_ambitious = st.radio("¿El objetivo es ambicioso pero alcanzable?", ("Sí", "No"))
-    objective_ambitious_comment = st.text_area("Comentarios adicionales:")
+    objective_ambitious_comment = st.text_area("Comentarios adicionales (opcional):", key="objective_ambitious_comment")
     if objective_ambitious == "No":
         okr_pass = False
         feedback.append(f"El objetivo no es ambicioso pero alcanzable. {objective_ambitious_comment}")
 
     objective_relevant = st.radio("¿El objetivo es relevante y significativo para el éxito de la organización?", ("Sí", "No"))
-    objective_relevant_comment = st.text_area("Comentarios adicionales:")
+    objective_relevant_comment = st.text_area("Comentarios adicionales (opcional):", key="objective_relevant_comment")
     if objective_relevant == "No":
         okr_pass = False
         feedback.append(f"El objetivo no es relevante y significativo para el éxito de la organización. {objective_relevant_comment}")
 
     objective_understandable = st.radio("¿El objetivo es comprensible y motivador para los equipos?", ("Sí", "No"))
-    objective_understandable_comment = st.text_area("Comentarios adicionales:")
+    objective_understandable_comment = st.text_area("Comentarios adicionales (opcional):", key="objective_understandable_comment")
     if objective_understandable == "No":
         okr_pass = False
         feedback.append(f"El objetivo no es comprensible y motivador para los equipos. {objective_understandable_comment}")
 
     # Evaluar preguntas sobre los resultados clave
     key_results_specific = st.radio("¿Los resultados clave son específicos y medibles?", ("Sí", "No"))
-    key_results_specific_comment = st.text_area("Comentarios adicionales:")
+    key_results_specific_comment = st.text_area("Comentarios adicionales (opcional):", key="key_results_specific_comment")
     if key_results_specific == "No":
         okr_pass = False
         feedback.append(f"Los resultados clave no son específicos y medibles. {key_results_specific_comment}")
 
     key_results_clear_progress = st.radio("¿Los resultados clave proporcionan una indicación clara de progreso hacia el logro del objetivo?", ("Sí", "No"))
-    key_results_clear_progress_comment = st.text_area("Comentarios adicionales:")
+    key_results_clear_progress_comment = st.text_area("Comentarios adicionales (opcional):", key="key_results_clear_progress_comment")
     if key_results_clear_progress == "No":
         okr_pass = False
         feedback.append(f"Los resultados clave no proporcionan una indicación clara de progreso hacia el logro del objetivo. {key_results_clear_progress_comment}")
 
     key_results_realistic = st.radio("¿Los resultados clave son realistas y factibles dentro del marco de tiempo establecido?", ("Sí", "No"))
-    key_results_realistic_comment = st.text_area("Comentarios adicionales:")
+    key_results_realistic_comment = st.text_area("Comentarios adicionales (opcional):", key="key_results_realistic_comment")
     if key_results_realistic == "No":
         okr_pass = False
         feedback.append(f"Los resultados clave no son realistas y factibles dentro del marco de tiempo establecido. {key_results_realistic_comment}")
 
     key_results_relevant = st.radio("¿Los resultados clave son relevantes para el objetivo y contribuyen significativamente a su logro?", ("Sí", "No"))
-    key_results_relevant_comment = st.text_area("Comentarios adicionales:")
+    key_results_relevant_comment = st.text_area("Comentarios adicionales (opcional):", key="key_results_relevant_comment")
     if key_results_relevant == "No":
         okr_pass = False
         feedback.append(f"Los resultados clave no son relevantes para el objetivo y contribuyen significativamente a su logro. {key_results_relevant_comment}")
 
     # Evaluar preguntas sobre la cascada de OKRs
     cascading_okrs = st.radio("¿El OKR está desglosado en OKRs específicos y medibles para cada equipo o departamento?", ("Sí", "No"))
-    cascading_okrs_comment = st.text_area("Comentarios adicionales:")
+    cascading_okrs_comment = st.text_area("Comentarios adicionales (opcional):", key="cascading_okrs_comment")
     if cascading_okrs == "No":
         okr_pass = False
         feedback.append(f"El OKR no está desglosado en OKRs específicos y medibles para cada equipo o departamento. {cascading_okrs_comment}")
 
     okrs_aligned = st.radio("¿Los OKRs de los equipos están alineados con los objetivos estratégicos de nivel superior?", ("Sí", "No"))
-    okrs_aligned_comment = st.text_area("Comentarios adicionales:")
+    okrs_aligned_comment = st.text_area("Comentarios adicionales (opcional):", key="okrs_aligned_comment")
     if okrs_aligned == "No":
         okr_pass = False
         feedback.append(f"Los OKRs de los equipos no están alineados con los objetivos estratégicos de nivel superior. {okrs_aligned_comment}")
 
     okrs_consistent = st.radio("¿Existe coherencia y consistencia en la cascada de OKRs a través de la organización?", ("Sí", "No"))
-    okrs_consistent_comment = st.text_area("Comentarios adicionales:")
+    okrs_consistent_comment = st.text_area("Comentarios adicionales (opcional):", key="okrs_consistent_comment")
     if okrs_consistent == "No":
         okr_pass = False
         feedback.append(f"No existe coherencia y consistencia en la cascada de OKRs a través de la organización. {okrs_consistent_comment}")
@@ -99,9 +99,9 @@ def plot_results(okr_pass, feedback):
     # Crear el gráfico de donas
     fig, ax = plt.subplots()
     ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')  # Asegurar que el gráfico de donas sea un círculo
+    ax.axis('equal')  # Asegurar que el gráfico sea un círculo
 
-    # Mostrar el gráfico en Streamlit
+    # Mostrar el gráfico
     st.pyplot(fig)
 
 def main():
