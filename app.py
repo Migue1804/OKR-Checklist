@@ -60,6 +60,13 @@ def evaluate_okr(objective, key_results):
         for idx, question in enumerate(okr_questions):
             if not okr_pass[idx]:
                 st.write(f"- {question}")
+                if idx < 4:
+                    comment = eval(f"objective_{question.lower().replace(' ', '_')}_comment")
+                elif 4 <= idx < 8:
+                    comment = eval(f"key_results_{question.lower().replace(' ', '_')}_comment")
+                else:
+                    comment = eval(f"{question.lower().replace(' ', '_')}_comment")
+                st.write(f"  Comentario: {comment if comment.strip() else 'sin información complementaria'}")
 
     # Mostrar el gráfico
     plot_results(okr_pass)
@@ -109,3 +116,4 @@ okr_questions = [
 
 if __name__ == "__main__":
     main()
+
