@@ -2,5 +2,5 @@ matplotlib==3.6.3
 matplotlib-inline==0.1.6
 XlsxWriter==3.2.0
 wordcloud==1.8.1
-spacy==3.1.3
-es-core-news-sm==3.1.0  # Esto instala el modelo de lenguaje en español
+spacy
+es-core-news-sm  # Esto instala el modelo de lenguaje en español
