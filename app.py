@@ -97,6 +97,8 @@ def evaluate_okr(objective, key_results):
 
     # Concatenate non-empty responses separated by commas into a new variable
     comentarios_adicionales = ', '.join(variable_respuesta)
+    st.write("Comentarios adicionales:")
+    st.write(comentarios_adicionales)
     # Verificar si hay comentarios ingresados
     if comentarios_adicionales:
         # Crear el objeto WordCloud con una fuente predeterminada
