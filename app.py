@@ -102,7 +102,7 @@ def evaluate_okr(objective, key_results, okr_questions):
     st.write(comentarios_adicionales)
 
     # Verificar si hay comentarios adicionales ingresados
-    if comentarios_adicionales:
+    if len(comentarios_adicionales) > 0:
         # Create and generate a word cloud image
         wordcloud = WordCloud().generate(comentarios_adicionales)
         
