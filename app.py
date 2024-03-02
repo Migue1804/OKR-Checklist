@@ -99,7 +99,7 @@ def evaluate_okr(objective, key_results, okr_questions):
     # Concatenate non-empty responses separated by commas into a new variable
     comentarios_adicionales = ', '.join(variable_respuesta)
     st.write("Comentarios adicionales:")
-    st.write(comentarios_adicionales)
+    #st.write(comentarios_adicionales)
 
     # Verificar si hay comentarios adicionales ingresados
     if len(comentarios_adicionales) > 0:
