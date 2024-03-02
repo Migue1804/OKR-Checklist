@@ -105,17 +105,19 @@ def evaluate_okr(objective, key_results):
         # Dividir los comentarios en palabras individuales y eliminar las stopwords
         stopwords = set(STOPWORDS)
         palabras = [word for word in comentarios_adicionales.split(', ') if word.lower() not in stopwords]
-        # Crear el objeto WordCloud con una fuente predeterminada
-        wordcloud = WordCloud(width=800, height=400, background_color='white', stopwords=stopwords).generate(' '.join(palabras))
-        # Mostrar el WordCloud
+        # Crear un diccionario con la frecuencia de cada palabra
+        word_freq = {}
+        for word in palabras:
+            word_freq[word] = word_freq.get(word, 0) + 1
+        # Generar el WordCloud
         plt.figure(figsize=(10, 5))
-        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.imshow(WordCloud(width=800, height=400, background_color='white').fit_words(word_freq))
         plt.axis('off')
         plt.title('WordCloud de Comentarios Adicionales')
         plt.show()
     else:
         st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
-    
+        
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
