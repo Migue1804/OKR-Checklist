@@ -107,7 +107,6 @@ def evaluate_okr(objective, key_results):
         plt.axis('off')
         plt.title('WordCloud de Comentarios Adicionales')
         st.pyplot()
-    
     else:
         st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
     
