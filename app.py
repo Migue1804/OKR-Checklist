@@ -88,7 +88,7 @@ def evaluate_okr(objective, key_results):
 
     # Reset index and rename index column
     df = df.reset_index().rename(columns={'index': 'Criterio de Evaluación'})
-    df = df[['Objetivo', 'Resultados Clave', 'Criterio de Evauación','Respuesta']]
+    df = df[['Objetivo', 'Resultados Clave', 'Criterio de Evaluación','Respuesta']]
     
     # Descargar DataFrame como Excel
     def download_excel():
