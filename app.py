@@ -2,14 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
-import spacy
 from collections import Counter
 from PIL import Image, ImageDraw, ImageFont
 import io
-import re
-from textblob import TextBlob
-# Cargar el modelo de lenguaje en español
-nlp = spacy.load("es_core_news_sm")     
 
 def evaluate_okr(objective, key_results):
     okr_pass = []
