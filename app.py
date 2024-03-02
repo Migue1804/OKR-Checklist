@@ -2,9 +2,15 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
+import spacy
 from collections import Counter
 from PIL import Image, ImageDraw, ImageFont
 import io
+import re
+import plotly.express as px
+from textblob import TextBlob
+# Cargar el modelo de lenguaje en español
+nlp = spacy.load("es_core_news_sm")     
 
 def evaluate_okr(objective, key_results):
     okr_pass = []
@@ -104,15 +110,22 @@ def evaluate_okr(objective, key_results):
     
     # Verificar si hay comentarios ingresados
     if comentarios_adicionales:
-        # Dividir los comentarios en palabras individuales y eliminar las stopwords
-        palabras = [word.strip() for comentario in comentarios_adicionales.split(',') for word in comentario.split()]
-        # Contar la frecuencia de cada palabra
-        contador = Counter(palabras)
-        
-        # Crear el WordCloud
-        wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(contador)
-        
+
+        # Combinar todas las respuestas en un solo texto
+        texto_respuestas = " ".join(df["Respuesta"])
+        # Analizar el texto con spaCy
+        doc = nlp(texto_respuestas)
+        # Lista de palabras clave: entidades principales y sustantivos
+        palabras_clave = [token.text for token in doc if token.pos_ in ("NOUN", "PROPN", "NOUNP")]
+        # Crear una cadena de texto a partir de las palabras clave
+        cadena_palabras_clave = " ".join(palabras_clave)
+        # Crear un WordCloud con las palabras clave
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cadena_palabras_clave)
         # Mostrar el WordCloud
+        plt.figure(figsize=(10, 5))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis("off")
+        plt.show()
         st.image(wordcloud.to_array(), caption='WordCloud de Comentarios Adicionales')
     else:
         st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
