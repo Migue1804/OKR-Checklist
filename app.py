@@ -1,55 +1,68 @@
 import streamlit as st
+import pandas as pd
 import matplotlib.pyplot as plt
 
 def evaluate_okr(objective, key_results):
     okr_pass = []
+    okr_results = {}
 
     # Evaluar preguntas sobre el objetivo
     objective_clear = st.radio("¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?", ("Sí", "No"))
     okr_pass.append(objective_clear == "Sí")
-    objective_clear_comment = st.text_area("Comentarios adicionales:", key="objective_clear_comment")
+    okr_results['Objetivo - Claramente Definido'] = objective_clear
+    okr_results['Comentario - Objetivo Claramente Definido'] = st.text_area("Comentarios adicionales:", key="objective_clear_comment")
 
     objective_ambitious = st.radio("¿El objetivo es ambicioso pero alcanzable?", ("Sí", "No"))
     okr_pass.append(objective_ambitious == "Sí")
-    objective_ambitious_comment = st.text_area("Comentarios adicionales:", key="objective_ambitious_comment")
+    okr_results['Objetivo - Ambicioso'] = objective_ambitious
+    okr_results['Comentario - Objetivo Ambicioso'] = st.text_area("Comentarios adicionales:", key="objective_ambitious_comment")
 
     objective_relevant = st.radio("¿El objetivo es relevante y significativo para el éxito de la organización?", ("Sí", "No"))
     okr_pass.append(objective_relevant == "Sí")
-    objective_relevant_comment = st.text_area("Comentarios adicionales:", key="objective_relevant_comment")
+    okr_results['Objetivo - Relevante'] = objective_relevant
+    okr_results['Comentario - Objetivo Relevante'] = st.text_area("Comentarios adicionales:", key="objective_relevant_comment")
 
     objective_understandable = st.radio("¿El objetivo es comprensible y motivador para los equipos?", ("Sí", "No"))
     okr_pass.append(objective_understandable == "Sí")
-    objective_understandable_comment = st.text_area("Comentarios adicionales:", key="objective_understandable_comment")
+    okr_results['Objetivo - Comprensible'] = objective_understandable
+    okr_results['Comentario - Objetivo Comprensible'] = st.text_area("Comentarios adicionales:", key="objective_understandable_comment")
 
     # Evaluar preguntas sobre los resultados clave
     key_results_specific = st.radio("¿Los resultados clave son específicos y medibles?", ("Sí", "No"))
     okr_pass.append(key_results_specific == "Sí")
-    key_results_specific_comment = st.text_area("Comentarios adicionales:", key="key_results_specific_comment")
+    okr_results['Resultados Clave - Específicos'] = key_results_specific
+    okr_results['Comentario - Resultados Clave Específicos'] = st.text_area("Comentarios adicionales:", key="key_results_specific_comment")
 
     key_results_clear_progress = st.radio("¿Los resultados clave proporcionan una indicación clara de progreso hacia el logro del objetivo?", ("Sí", "No"))
     okr_pass.append(key_results_clear_progress == "Sí")
-    key_results_clear_progress_comment = st.text_area("Comentarios adicionales:", key="key_results_clear_progress_comment")
+    okr_results['Resultados Clave - Progreso Claro'] = key_results_clear_progress
+    okr_results['Comentario - Resultados Clave Progreso Claro'] = st.text_area("Comentarios adicionales:", key="key_results_clear_progress_comment")
 
     key_results_realistic = st.radio("¿Los resultados clave son realistas y factibles dentro del marco de tiempo establecido?", ("Sí", "No"))
     okr_pass.append(key_results_realistic == "Sí")
-    key_results_realistic_comment = st.text_area("Comentarios adicionales:", key="key_results_realistic_comment")
+    okr_results['Resultados Clave - Realistas'] = key_results_realistic
+    okr_results['Comentario - Resultados Clave Realistas'] = st.text_area("Comentarios adicionales:", key="key_results_realistic_comment")
 
     key_results_relevant = st.radio("¿Los resultados clave son relevantes para el objetivo y contribuyen significativamente a su logro?", ("Sí", "No"))
     okr_pass.append(key_results_relevant == "Sí")
-    key_results_relevant_comment = st.text_area("Comentarios adicionales:", key="key_results_relevant_comment")
+    okr_results['Resultados Clave - Relevantes'] = key_results_relevant
+    okr_results['Comentario - Resultados Clave Relevantes'] = st.text_area("Comentarios adicionales:", key="key_results_relevant_comment")
 
     # Evaluar preguntas sobre la cascada de OKRs
     cascading_okrs = st.radio("¿El OKR está desglosado en OKRs específicos y medibles para cada equipo o departamento?", ("Sí", "No"))
     okr_pass.append(cascading_okrs == "Sí")
-    cascading_okrs_comment = st.text_area("Comentarios adicionales:", key="cascading_okrs_comment")
+    okr_results['OKRs - Desglosados'] = cascading_okrs
+    okr_results['Comentario - OKRs Desglosados'] = st.text_area("Comentarios adicionales:", key="cascading_okrs_comment")
 
     okrs_aligned = st.radio("¿Los OKRs de los equipos están alineados con los objetivos estratégicos de nivel superior?", ("Sí", "No"))
     okr_pass.append(okrs_aligned == "Sí")
-    okrs_aligned_comment = st.text_area("Comentarios adicionales:", key="okrs_aligned_comment")
+    okr_results['OKRs - Alineados'] = okrs_aligned
+    okr_results['Comentario - OKRs Alineados'] = st.text_area("Comentarios adicionales:", key="okrs_aligned_comment")
 
     okrs_consistent = st.radio("¿Existe coherencia y consistencia en la cascada de OKRs a través de la organización?", ("Sí", "No"))
     okr_pass.append(okrs_consistent == "Sí")
-    okrs_consistent_comment = st.text_area("Comentarios adicionales:", key="okrs_consistent_comment")
+    okr_results['OKRs - Coherentes'] = okrs_consistent
+    okr_results['Comentario - OKRs Coherentes'] = st.text_area("Comentarios adicionales:", key="okrs_consistent_comment")
 
     # Concluir evaluación del OKR
     st.write("Resultado de la evaluación del OKR:")
@@ -63,6 +76,19 @@ def evaluate_okr(objective, key_results):
 
     # Mostrar el gráfico
     plot_results(okr_pass)
+
+    # Create DataFrame
+    df = pd.DataFrame.from_dict(okr_results, orient='index', columns=['Respuesta'])
+
+    # Descargar DataFrame como Excel
+    def download_excel():
+        df.to_excel("OKR_evaluation.xlsx", index=False)
+        st.success("El DataFrame se ha descargado como OKR_evaluation.xlsx")
+
+    st.download_button(label="Descargar DataFrame como Excel", data=df.to_excel, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', on_click=download_excel)
+
+    st.write("DataFrame:")
+    st.write(df)
 
 def plot_results(okr_pass):
     # Contar el número de puntos que cumplen y no cumplen
@@ -84,7 +110,8 @@ def plot_results(okr_pass):
 
 def main():
     # Agregar una imagen en la parte superior
-    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesariost.title("App de Evaluación de OKRs")
+    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesario
+    st.title("App de Evaluación de OKRs")
     # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
     key_results = st.text_area("Resultados Clave (separa con saltos de línea):")
