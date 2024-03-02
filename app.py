@@ -101,8 +101,10 @@ def evaluate_okr(objective, key_results):
     st.write(comentarios_adicionales)
     # Verificar si hay comentarios ingresados
     if comentarios_adicionales:
+        # Dividir los comentarios en palabras individuales
+        palabras = comentarios_adicionales.split(', ')
         # Crear el objeto WordCloud con una fuente predeterminada
-        wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=None).generate(comentarios_adicionales)
+        wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=None).generate(' '.join(palabras))
         # Mostrar el WordCloud
         plt.figure(figsize=(10, 5))
         plt.imshow(wordcloud, interpolation='bilinear')
