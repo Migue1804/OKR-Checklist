@@ -100,14 +100,19 @@ def evaluate_okr(objective, key_results, okr_questions):
     comentarios_adicionales = ', '.join(variable_respuesta)
     st.write("Comentarios adicionales:")
     st.write(comentarios_adicionales)
-    # Create and generate a word cloud image:
-    wordcloud = WordCloud().generate(comentarios_adicionales)
-    
-    # Display the generated image:
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis("off")
-    plt.show()
-    st.pyplot()
+
+    # Verificar si hay comentarios adicionales ingresados
+    if comentarios_adicionales:
+        # Create and generate a word cloud image
+        wordcloud = WordCloud().generate(comentarios_adicionales)
+        
+        # Display the generated image
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
+        st.pyplot()
+    else:
+        st.write("Sin comentarios")
 
     # Descargar DataFrame como Excel
     def download_excel():
