@@ -81,6 +81,9 @@ def evaluate_okr(objective, key_results):
     # Create DataFrame
     df = pd.DataFrame.from_dict(okr_results, orient='index', columns=['Respuesta'])
 
+    # Reset index and rename index column
+    df = df.reset_index().rename(columns={'index': 'Criterio de Evaluación'})
+
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
