@@ -4,5 +4,5 @@ XlsxWriter==3.2.0
 wordcloud
 Pillow==9.5.0
 spacy
-es_core_news_sm
+es_core_news_sm==3.1.0
 textblob
