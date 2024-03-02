@@ -7,7 +7,7 @@ import spacy
 from spacy.lang.es.stop_words import STOP_WORDS
 
 # Cargar el modelo de lenguaje en español
-nlp = spacy.load("es_core_news_sm")
+#nlp = spacy.load("es_core_news_sm")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def evaluate_okr(objective, key_results, okr_questions):
