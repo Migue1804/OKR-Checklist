@@ -84,9 +84,8 @@ def evaluate_okr(objective, key_results):
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
-        writer.save()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
         output.seek(0)
         return output
 
