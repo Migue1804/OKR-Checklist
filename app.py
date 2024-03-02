@@ -7,15 +7,12 @@ import io
 def evaluate_okr(objective, key_results):
     okr_pass = []
     okr_results = {}
-    all_comments = ""  # Variable para almacenar todos los comentarios
-    
+       
     # Evaluar preguntas sobre el objetivo
     objective_clear = st.radio("¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?", ("Sí", "No"))
     okr_pass.append(objective_clear == "Sí")
     okr_results['Objetivo - Claramente Definido'] = objective_clear
     okr_results['Comentario - Objetivo Claramente Definido'] = st.text_area("Comentarios adicionales:", key="objective_clear_comment")
-    comment = st.text_area("Comentarios adicionales:", key="objective_clear_comment")
-    all_comments += comment + " "  # Agregar el comentario a la variable
     
     objective_ambitious = st.radio("¿El objetivo es ambicioso pero alcanzable?", ("Sí", "No"))
     okr_pass.append(objective_ambitious == "Sí")
@@ -135,9 +132,6 @@ def main():
 
     # Evaluar el OKR
     evaluate_okr(objective, key_results)
-    # Agregar el WordCloud con todos los comentarios
-    st.subheader("WordCloud de Comentarios")
-    generate_wordcloud(all_comments)
     
 # Preguntas para la evaluación del OKR
 okr_questions = [
