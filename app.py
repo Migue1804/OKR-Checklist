@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import io
 
 def evaluate_okr(objective, key_results):
     okr_pass = []
@@ -82,10 +83,15 @@ def evaluate_okr(objective, key_results):
 
     # Descargar DataFrame como Excel
     def download_excel():
-        df.to_excel("OKR_evaluation.xlsx", index=False)
-        st.success("El DataFrame se ha descargado como OKR_evaluation.xlsx")
+        output = io.BytesIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
+        writer.save()
+        output.seek(0)
+        return output
 
-    st.download_button(label="Descargar DataFrame como Excel", data=df.to_excel, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', on_click=download_excel)
+    excel_data = download_excel()
+    st.download_button(label="Descargar DataFrame como Excel", data=excel_data, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', help="Haz clic para descargar el DataFrame como un archivo Excel")
 
     st.write("DataFrame:")
     st.write(df)
