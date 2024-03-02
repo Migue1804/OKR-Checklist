@@ -81,6 +81,10 @@ def evaluate_okr(objective, key_results):
     # Create DataFrame
     df = pd.DataFrame.from_dict(okr_results, orient='index', columns=['Respuesta'])
 
+    # Add new columns for objective and key results
+    df['Objetivo'] = objective
+    df['Resultados Clave'] = key_results
+
     # Reset index and rename index column
     df = df.reset_index().rename(columns={'index': 'Criterio de Evaluación'})
 
@@ -122,7 +126,7 @@ def main():
     st.title("App de Evaluación de OKRs")
     # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
-    key_results = st.text_area("Resultados Clave (separa con saltos de línea):")
+    key_results = st.text_area("Resultados Clave:")
 
     # Evaluar el OKR
     evaluate_okr(objective, key_results)
