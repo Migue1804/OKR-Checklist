@@ -7,7 +7,6 @@ from collections import Counter
 from PIL import Image, ImageDraw, ImageFont
 import io
 import re
-import plotly.express as px
 from textblob import TextBlob
 # Cargar el modelo de lenguaje en español
 nlp = spacy.load("es_core_news_sm")     
