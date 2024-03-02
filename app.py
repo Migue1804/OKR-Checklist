@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+from wordcloud import WordCloud, STOPWORDS
 import io
 
 def evaluate_okr(objective, key_results):
@@ -99,18 +99,20 @@ def evaluate_okr(objective, key_results):
     comentarios_adicionales = ', '.join(variable_respuesta)
     st.write("Comentarios adicionales:")
     st.write(comentarios_adicionales)
+
     # Verificar si hay comentarios ingresados
     if comentarios_adicionales:
-        # Dividir los comentarios en palabras individuales
-        palabras = comentarios_adicionales.split(', ')
+        # Dividir los comentarios en palabras individuales y eliminar las stopwords
+        stopwords = set(STOPWORDS)
+        palabras = [word for word in comentarios_adicionales.split(', ') if word.lower() not in stopwords]
         # Crear el objeto WordCloud con una fuente predeterminada
-        wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=None).generate(' '.join(palabras))
+        wordcloud = WordCloud(width=800, height=400, background_color='white', stopwords=stopwords).generate(' '.join(palabras))
         # Mostrar el WordCloud
         plt.figure(figsize=(10, 5))
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
         plt.title('WordCloud de Comentarios Adicionales')
-        st.pyplot()
+        plt.show()
     else:
         st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
     
