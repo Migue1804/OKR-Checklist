@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import io
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def evaluate_okr(objective, key_results, okr_questions):
     okr_pass = []
