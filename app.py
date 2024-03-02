@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 from collections import Counter
+from PIL import Image, ImageDraw, ImageFont
 import io
 
 def evaluate_okr(objective, key_results):
