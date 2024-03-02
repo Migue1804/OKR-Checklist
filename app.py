@@ -3,11 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import io
-import spacy
-from spacy.lang.es.stop_words import STOP_WORDS
 
-# Cargar el modelo de lenguaje en español
-#nlp = spacy.load("es_core_news_sm")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def evaluate_okr(objective, key_results, okr_questions):
@@ -108,27 +104,14 @@ def evaluate_okr(objective, key_results, okr_questions):
 
     # Verificar si hay comentarios adicionales ingresados
     if len(comentarios_adicionales) > 0:
-        # Procesar el texto con spaCy
-        doc = nlp(comentarios_adicionales)
-    
-        # Filtrar las palabras relevantes
-        palabras_relevantes = [token.text for token in doc if not token.is_stop and not token.is_punct]
-    
-        # Crear una cadena de texto a partir de las palabras filtradas
-        texto_filtrado = " ".join(palabras_relevantes)
-    
-        # Verificar si hay palabras relevantes después del filtrado
-        if texto_filtrado:
-            # Crear y generar el WordCloud con el texto filtrado
-            wordcloud = WordCloud().generate(texto_filtrado)
-    
-            # Mostrar el WordCloud
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis("off")
-            plt.show()
-            st.pyplot()
-        else:
-            st.write("Sin palabras relevantes para mostrar en el WordCloud")
+        # Create and generate a word cloud image
+        wordcloud = WordCloud().generate(comentarios_adicionales)
+        
+        # Display the generated image
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
+        st.pyplot()
     else:
         st.write("Sin comentarios")
 
