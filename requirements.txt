@@ -1,5 +1,8 @@
 matplotlib==3.6.3
 matplotlib-inline==0.1.6
 XlsxWriter==3.2.0
-wordcloud==1.8.1
-Pillow==8.3.2
+wordcloud
+Pillow
+spacy
+es_core_news_sm
+textblob
