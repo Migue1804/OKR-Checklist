@@ -1,3 +1,5 @@
 matplotlib==3.6.3
 matplotlib-inline==0.1.6
 XlsxWriter==3.2.0
+wordcloud==1.9.3
+spacy==3.7.4
