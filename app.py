@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud, STOPWORDS
-from collections import Counter
-from PIL import Image, ImageDraw, ImageFont
+from wordcloud import WordCloud
+import spacy
 import io
 
-def evaluate_okr(objective, key_results):
+# Cargar el modelo de lenguaje en español
+nlp = spacy.load("es_core_news_sm")     
+
+def evaluate_okr(objective, key_results, okr_questions):
     okr_pass = []
     okr_results = {}
        
@@ -102,6 +104,28 @@ def evaluate_okr(objective, key_results):
     st.write("Comentarios adicionales:")
     st.write(comentarios_adicionales)
     
+    # Verificar si hay comentarios ingresados
+    if comentarios_adicionales:
+
+        # Combinar todas las respuestas en un solo texto
+        texto_respuestas = " ".join(df["Respuesta"])
+        # Analizar el texto con spaCy
+        doc = nlp(texto_respuestas)
+        # Lista de palabras clave: entidades principales y sustantivos
+        palabras_clave = [token.text for token in doc if token.pos_ in ("NOUN", "PROPN", "NOUNP")]
+        # Crear una cadena de texto a partir de las palabras clave
+        cadena_palabras_clave = " ".join(palabras_clave)
+        # Crear un WordCloud con las palabras clave
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cadena_palabras_clave)
+        # Mostrar el WordCloud
+        plt.figure(figsize=(10, 5))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis("off")
+        plt.show()
+        st.image(wordcloud.to_array(), caption='WordCloud de Comentarios Adicionales')
+    else:
+        st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
+        
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
@@ -142,23 +166,23 @@ def main():
     objective = st.text_input("Objetivo:")
     key_results = st.text_area("Resultados Clave:")
 
-    # Evaluar el OKR
-    evaluate_okr(objective, key_results)
-    
-# Preguntas para la evaluación del OKR
-okr_questions = [
-    "¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?",
-    "¿El objetivo es ambicioso pero alcanzable?",
-    "¿El objetivo es relevante y significativo para el éxito de la organización?",
-    "¿El objetivo es comprensible y motivador para los equipos?",
-    "¿Los resultados clave son específicos y medibles?",
-    "¿Los resultados clave proporcionan una indicación clara de progreso hacia el logro del objetivo?",
-    "¿Los resultados clave son realistas y factibles dentro del marco de tiempo establecido?",
-    "¿Los resultados clave son relevantes para el objetivo y contribuyen significativamente a su logro?",
-    "¿El OKR está desglosado en OKRs específicos y medibles para cada equipo o departamento?",
-    "¿Los OKRs de los equipos están alineados con los objetivos estratégicos de nivel superior?",
-    "¿Existe coherencia y consistencia en la cascada de OKRs a través de la organización?"
-]
+    # Preguntas para la evaluación del OKR
+    okr_questions = [
+        "¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?",
+        "¿El objetivo es ambicioso pero alcanzable?",
+        "¿El objetivo es relevante y significativo para el éxito de la organización?",
+        "¿El objetivo es comprensible y motivador para los equipos?",
+        "¿Los resultados clave son específicos y medibles?",
+        "¿Los resultados clave proporcionan una indicación clara de progreso hacia el logro del objetivo?",
+        "¿Los resultados clave son realistas y factibles dentro del marco de tiempo establecido?",
+        "¿Los resultados clave son relevantes para el objetivo y contribuyen significativamente a su logro?",
+        "¿El OKR está desglosado en OKRs específicos y medibles para cada equipo o departamento?",
+        "¿Los OKRs de los equipos están alineados con los objetivos estratégicos de nivel superior?",
+        "¿Existe coherencia y consistencia en la cascada de OKRs a través de la organización?"
+    ]
 
+    # Evaluar el OKR
+    evaluate_okr(objective, key_results, okr_questions)
+    
 if __name__ == "__main__":
     main()
