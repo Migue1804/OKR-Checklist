@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
+from collections import Counter
 import io
 
 def evaluate_okr(objective, key_results):
