@@ -1,12 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
-import spacy
 import io
-
-# Cargar el modelo de lenguaje en español
-nlp = spacy.load("es_core_news_sm")
 
 def evaluate_okr(objective, key_results):
     okr_pass = []
@@ -92,12 +87,8 @@ def evaluate_okr(objective, key_results):
 
     # Reset index and rename index column
     df = df.reset_index().rename(columns={'index': 'Criterio de Evaluación'})
-    df = df[['Objetivo', 'Resultados Clave', 'Criterio de Evaluación','Respuesta']]
+    df = df[['Objetivo', 'Resultados Clave', 'Criterio de Evauación','Respuesta]]
     
-    # WordCloud
-    st.subheader("WordCloud de Palabras Clave")
-    create_wordcloud(df)
-
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
@@ -130,40 +121,18 @@ def plot_results(okr_pass):
     # Mostrar el gráfico
     st.pyplot(fig)
 
-def create_wordcloud(df):
-    # Combine all responses into a single text
-    text = " ".join(df['Respuesta'])
-
-    # Analyze text with spaCy
-    doc = nlp(text)
-
-    # List of keywords: main entities and nouns
-    keywords = [token.text for token in doc if token.pos_ in ("NOUN", "PROPN")]
-
-    # Create a string from keywords
-    keyword_string = " ".join(keywords)
-
-    # Create a WordCloud with keywords
-    wordcloud = WordCloud(width=800, height=400, background_color='white').generate(keyword_string)
-
-    # Show the WordCloud
-    plt.figure(figsize=(10, 5))
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    st.pyplot()
-
 def main():
-    # Add an image at the top
-    st.image("app.jpg", width=700)  # Replace "app.jpg" with your image path and adjust width as needed
+    # Agregar una imagen en la parte superior
+    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesario
     st.title("App de Evaluación de OKRs")
-    # Interface to enter objective and key results
+    # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
-    key_results = st.text_area("Resultados Clave (usa la siguiente recomendación: de X a Y para Cuando)")
+    key_results = st.text_area("Resultados Clave:")
 
-    # Evaluate OKR
+    # Evaluar el OKR
     evaluate_okr(objective, key_results)
 
-# Questions for OKR evaluation
+# Preguntas para la evaluación del OKR
 okr_questions = [
     "¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?",
     "¿El objetivo es ambicioso pero alcanzable?",
