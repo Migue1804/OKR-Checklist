@@ -104,17 +104,22 @@ def evaluate_okr(objective, key_results):
     # Verificar si hay comentarios ingresados
     if comentarios_adicionales:
         # Dividir los comentarios en palabras individuales y eliminar las stopwords
-        palabras = [word.strip() for word in comentarios_adicionales.split(',')]
+        palabras = [word.strip() for comentario in comentarios_adicionales.split(',') for word in comentario.split()]
         # Contar la frecuencia de cada palabra
         contador = Counter(palabras)
         # Crear un DataFrame con los datos del contador
         df_wordcloud = pd.DataFrame(list(contador.items()), columns=['Palabra', 'Frecuencia'])
+        # Ordenar por frecuencia de palabra
+        df_wordcloud = df_wordcloud.sort_values(by='Frecuencia', ascending=False)
+        
         # Mostrar el WordCloud como un gráfico de barras utilizando Streamlit
         st.bar_chart(df_wordcloud.set_index('Palabra'))
-        st.pyplot()
+        
+        # Evitar la advertencia de PyplotGlobalUseWarning
+        st.set_option('deprecation.showPyplotGlobalUse', False)
     else:
         st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
-        
+    
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
