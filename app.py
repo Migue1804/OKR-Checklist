@@ -103,29 +103,7 @@ def evaluate_okr(objective, key_results, okr_questions):
     comentarios_adicionales = ', '.join(variable_respuesta)
     st.write("Comentarios adicionales:")
     st.write(comentarios_adicionales)
-    
-    # Verificar si hay comentarios ingresados
-    if comentarios_adicionales:
-
-        # Combinar todas las respuestas en un solo texto
-        texto_respuestas = " ".join(df["Respuesta"])
-        # Analizar el texto con spaCy
-        doc = nlp(texto_respuestas)
-        # Lista de palabras clave: entidades principales y sustantivos
-        palabras_clave = [token.text for token in doc if token.pos_ in ("NOUN", "PROPN", "NOUNP")]
-        # Crear una cadena de texto a partir de las palabras clave
-        cadena_palabras_clave = " ".join(palabras_clave)
-        # Crear un WordCloud con las palabras clave
-        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cadena_palabras_clave)
-        # Mostrar el WordCloud
-        plt.figure(figsize=(10, 5))
-        plt.imshow(wordcloud, interpolation="bilinear")
-        plt.axis("off")
-        plt.show()
-        st.image(wordcloud.to_array(), caption='WordCloud de Comentarios Adicionales')
-    else:
-        st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
-        
+          
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
