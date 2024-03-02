@@ -127,7 +127,7 @@ def main():
     st.title("App de Evaluación de OKRs")
     # Interfaz para ingresar el objetivo y los resultados clave
     objective = st.text_input("Objetivo:")
-    key_results = st.text_area("Resultados Clave:")
+    key_results = st.text_area("Resultados Clave (usa la siguiente recomendación: de X a Y para Cuando")
 
     # Evaluar el OKR
     evaluate_okr(objective, key_results)
