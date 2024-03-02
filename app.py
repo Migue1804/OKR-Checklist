@@ -99,7 +99,22 @@ def evaluate_okr(objective, key_results):
     comentarios_adicionales = ', '.join(variable_respuesta)
     st.write("Comentarios adicionales:")
     st.write(comentarios_adicionales)
-       
+    # Verificar si hay comentarios ingresados
+    if comentarios_adicionales:
+        # Dividir los comentarios en palabras individuales y eliminar las stopwords
+        palabras = [word.strip() for word in comentarios_adicionales.split(',')]
+        # Contar la frecuencia de cada palabra
+        contador = Counter(palabras)
+        # Generar el WordCloud
+        wordcloud = plt.bar(contador.keys(), contador.values())
+        plt.xlabel('Palabra')
+        plt.ylabel('Frecuencia')
+        plt.title('WordCloud de Comentarios Adicionales')
+        plt.xticks(rotation=45)
+        plt.show()
+    else:
+        st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
+        
     # Descargar DataFrame como Excel
     def download_excel():
         output = io.BytesIO()
