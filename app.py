@@ -89,6 +89,28 @@ def evaluate_okr(objective, key_results):
     # Reset index and rename index column
     df = df.reset_index().rename(columns={'index': 'Criterio de Evaluación'})
     df = df[['Objetivo', 'Resultados Clave', 'Criterio de Evaluación','Respuesta']]
+    # Create a new DataFrame 'Criterio de Evaluación' column for rows containing the word 'Comentario'
+    df_filtrado = df[df['Criterio de Evaluación'].str.contains('Comentario')]
+
+    # Filter the 'Respuesta' column for non-empty rows
+    variable_respuesta = df_filtrado[df_filtrado['Respuesta'].str.strip() != '']['Respuesta']
+
+    # Concatenate non-empty responses separated by commas into a new variable
+    comentarios_adicionales = ', '.join(variable_respuesta)
+    # Verificar si hay comentarios ingresados
+    if comentarios_adicionales:
+        # Crear el objeto WordCloud
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(comentarios_adicionales)
+    
+        # Mostrar el WordCloud
+        plt.figure(figsize=(10, 5))
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.title('WordCloud de Comentarios Adicionales')
+        st.pyplot()
+    
+    else:
+        st.write("No hay comentarios adicionales ingresados para mostrar en el WordCloud.")
     
     # Descargar DataFrame como Excel
     def download_excel():
