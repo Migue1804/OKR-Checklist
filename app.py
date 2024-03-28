@@ -100,11 +100,55 @@ def evaluate_okr(objective, key_results, okr_questions):
     # Concatenate non-empty responses separated by commas into a new variable
     comentarios_adicionales = ', '.join(variable_respuesta)
     st.write("Comentarios adicionales:")
-    #st.write(comentarios_adicionales)
 
     # Verificar si hay comentarios adicionales ingresados
     if len(comentarios_adicionales) > 0:
-        # Crear y generar la imagen del WordCloud
+        # Separar comentarios positivos y negativos
+        comentarios_positivos = [comentario for comentario in comentarios_adicionales.split(',') if is_positive(comentario)]
+        comentarios_negativos = [comentario for comentario in comentarios_adicionales.split(',') if not is_positive(comentario)]
+
+        # Generar y mostrar los wordclouds
+        if comentarios_positivos:
+            st.write("Comentarios adicionales positivos:")
+            generate_wordcloud(comentarios_positivos)
+        
+        if comentarios_negativos:
+            st.write("Comentarios adicionales negativos:")
+            generate_wordcloud(comentarios_negativos)
+    else:
+        st.write("Sin comentarios")
+
+    # Descargar DataFrame como Excel
+    def download_excel():
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
+        output.seek(0)
+        return output
+
+    excel_data = download_excel()
+    st.download_button(label="Descargar DataFrame como Excel", data=excel_data, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', help="Haz clic para descargar el DataFrame como un archivo Excel")
+
+    st.write("DataFrame:")
+    st.write(df)
+
+def is_positive(comentario):
+    palabras_positivas = ["bien", "excelente", "mejorar", "satisfactorio"]
+    palabras_negativas = ["problema", "deficiencia", "insatisfactorio", "error"]
+    
+    for palabra in palabras_positivas:
+        if palabra in comentario.lower():
+            return True
+    
+    for palabra in palabras_negativas:
+        if palabra in comentario.lower():
+            return False
+    
+    return False
+
+def generate_wordcloud(comentarios):
+    if comentarios:
+        comentarios_concatenados = ' '.join(comentarios)
         stopwords = [
             'a', 'al', 'algo', 'algunas', 'algunos', 'ante', 'antes', 'como', 'con', 'contra', 'cual', 'cuales',
             'cuando', 'de', 'del', 'desde', 'donde', 'durante', 'e', 'el', 'ella', 'ellas', 'ellos', 'en', 'entre',
@@ -135,7 +179,7 @@ def evaluate_okr(objective, key_results, okr_questions):
             'tuviéramos', 'tuviésemos', 'tuvo', 'tuya', 'tuyas', 'tuyo', 'tuyos', 'tú', 'un', 'una', 'uno', 'unos',
             'vosostras', 'vosostros', 'vuestra', 'vuestras', 'vuestro', 'vuestros', 'y', 'ya', 'yo'
         ]
-        wordcloud = WordCloud(stopwords=stopwords).generate(comentarios_adicionales)
+        wordcloud = WordCloud(stopwords=stopwords).generate(comentarios_concatenados)
         
         # Display the generated image
         plt.imshow(wordcloud, interpolation='bilinear')
@@ -144,20 +188,6 @@ def evaluate_okr(objective, key_results, okr_questions):
         st.pyplot()
     else:
         st.write("Sin comentarios")
-
-    # Descargar DataFrame como Excel
-    def download_excel():
-        output = io.BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
-        output.seek(0)
-        return output
-
-    excel_data = download_excel()
-    st.download_button(label="Descargar DataFrame como Excel", data=excel_data, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', help="Haz clic para descargar el DataFrame como un archivo Excel")
-
-    st.write("DataFrame:")
-    st.write(df)
 
 def plot_results(okr_pass):
     # Contar el número de puntos que cumplen y no cumplen
