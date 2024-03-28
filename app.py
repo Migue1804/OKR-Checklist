@@ -118,16 +118,6 @@ def evaluate_okr(objective, key_results, okr_questions):
     else:
         st.write("Sin comentarios")
 
-    # Descargar DataFrame como Excel
-    def download_excel():
-        output = io.BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
-        output.seek(0)
-        return output
-
-    excel_data = download_excel()
-    st.download_button(label="Descargar DataFrame como Excel", data=excel_data, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', help="Haz clic para descargar el DataFrame como un archivo Excel")
 
     st.write("DataFrame:")
     st.write(df)
