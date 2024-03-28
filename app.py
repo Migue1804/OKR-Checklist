@@ -118,55 +118,23 @@ def evaluate_okr(objective, key_results, okr_questions):
     else:
         st.write("Sin comentarios")
 
+    # Descargar DataFrame como Excel
+    def download_excel():
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
+        output.seek(0)
+        return output
+
+    excel_data = download_excel()
+    st.download_button(label="Descargar DataFrame como Excel", data=excel_data, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', help="Haz clic para descargar el DataFrame como un archivo Excel")
 
     st.write("DataFrame:")
     st.write(df)
 
 def is_positive(comentario):
-    # Palabras positivas
-    palabras_positivas = [
-        "bien", "excelente", "mejorar", "satisfactorio", "éxito", "logro", "bueno", "genial", "positivo", "afortunado",
-        "brillante", "exitoso", "increíble", "fantástico", "increíble", "maravilloso", "productivo", "aprobado", "triunfo",
-        "favorable", "perfecto", "eficiente", "avance", "progreso", "aplauso", "mejorado", "esperanzador", "innovador",
-        "crecimiento", "ganador", "beneficioso", "estupendo", "valioso", "acertado", "óptimo", "ventajoso", "construir",
-        "positivamente", "útil", "correcto", "agradable", "bravo", "excelencia", "logrado", "fortaleza", "victorioso",
-        "prometedor", "felicidad", "prosperidad", "éxito", "bendecido", "triunfante", "confiable", "sobresaliente",
-        "agradecido", "genio", "sabio", "asombroso", "favorito", "prosperidad", "virtuoso", "estrella", "notable",
-        "exaltado", "saludable", "hábil", "sólido", "triunfante", "logrado", "gloria", "admirable", "admirado",
-        "extraordinario", "impresionante", "especial", "luminoso", "vibrante", "sabio", "espléndido", "fenomenal",
-        "alegre", "sofisticado", "excelencia", "grandioso", "brillante", "positividad", "afortunado", "deseable",
-        "favorable", "optimista", "esperanzador", "valioso", "alegría", "éxito", "progreso", "risueño", "visionario",
-        "visionario", "esperanza", "logro", "exaltación", "vitalidad", "logro", "entusiasmo", "triunfo", "florecimiento",
-        "creativo", "estimulante", "motivador", "inspirador", "positivismo", "iluminado", "satisfacción", "gozo",
-        "excitación", "emocionante", "felicidad", "gratitud", "buenaventura", "victoria", "sonriente", "hermoso",
-        "alentador", "exitoso", "afortunado", "valiente", "firme", "sincero", "cálido", "digno", "notable", "estimado",
-        "optimista", "júbilo", "apasionado", "empoderado", "compasivo", "enriquecedor", "visionario", "poderoso",
-        "transformador", "conmovedor", "trascendente", "radiante", "resplandeciente", "alentador", "inquebrantable",
-        "armonioso", "celestial", "triunfal", "intachable", "glorioso", "triunfante"
-    ]
-    
-    # Palabras negativas
-    palabras_negativas = [
-        "problema", "deficiencia", "insatisfactorio", "error", "falla", "preocupación", "fracaso", "pobre", "desafío",
-        "crisis", "problema", "débil", "insuficiente", "inadecuado", "negativo", "inaceptable", "peligro", "lamentable",
-        "peligroso", "ineficaz", "inferior", "dañino", "decepción", "malo", "horrible", "insatisfactorio", "fracaso",
-        "ineficiente", "desafortunado", "conflicto", "defecto", "limitación", "fallo", "deficiente", "desastroso",
-        "decepcionante", "incompetente", "debilidad", "dañado", "inapropiado", "negativo", "falta", "atroz", "injusto",
-        "incapaz", "miserable", "perjudicial", "trágico", "oscuro", "horroroso", "triste", "desesperado", "abrumador",
-        "amenaza", "desgracia", "atroz", "aterrador", "horrible", "pésimo", "atroz", "tristeza", "pena", "desesperación",
-        "inaceptable", "amargura", "impotente", "ruinoso", "aborrecible", "lamentable", "inútil", "desalentador",
-        "agonizante", "despiadado", "peligroso", "sin esperanza", "agonía", "lamentable", "doloroso", "tenebroso",
-        "enfermedad", "desolador", "devastador", "siniestro", "lúgubre", "malo", "amargo", "desgarrador", "penoso",
-        "aterrador", "estremecedor", "lamentoso", "tormentoso", "caótico", "desalentador", "angustiante", "catastrófico",
-        "oscuro", "traumático", "desastroso", "débil", "perdido", "inútil", "sombrio", "insoportable", "fatal", "miseria",
-        "agonía", "lamentable", "pavoroso", "lamentoso", "tormentoso", "angustiante", "inquietante", "inseguro",
-        "amargado", "desolado", "infeliz", "temible", "repulsivo", "atroz", "traumático", "lamentoso", "patético",
-        "siniestro", "oscuro", "turbulento", "desesperanzador", "pésimo", "desgarrador", "pesadilla", "inquietante",
-        "deprimente", "funesto", "miserable", "inestable", "desalentador", "sombrío", "agonizante", "despiadado",
-        "trágico", "atroz", "abominable", "maldito", "ruinoso", "insoportable", "desgarrador", "agonizante", "penoso",
-        "lamentable", "insoportable", "sin salida", "impotente", "indeseable", "deshonesto", "inaceptable"
-    ]
-
+    palabras_positivas = ["bien", "excelente", "mejorar", "satisfactorio"]
+    palabras_negativas = ["problema", "deficiencia", "insatisfactorio", "error"]
     
     for palabra in palabras_positivas:
         if palabra in comentario.lower():
@@ -181,46 +149,43 @@ def is_positive(comentario):
 def generate_wordcloud(comentarios):
     if comentarios:
         comentarios_concatenados = ' '.join(comentarios)
-        if comentarios_concatenados.strip():  # Verificar si la cadena no está vacía
-            stopwords = [
-                'a', 'al', 'algo', 'algunas', 'algunos', 'ante', 'antes', 'como', 'con', 'contra', 'cual', 'cuales',
-                'cuando', 'de', 'del', 'desde', 'donde', 'durante', 'e', 'el', 'ella', 'ellas', 'ellos', 'en', 'entre',
-                'era', 'erais', 'eramos', 'eran', 'eras', 'eres', 'es', 'esa', 'esas', 'ese', 'eso', 'esos', 'esta', 'estaba',
-                'estabais', 'estaban', 'estabas', 'estamos', 'estan', 'estando', 'estar', 'estaremos', 'estara', 'estarán',
-                'estarás', 'estaré', 'estaréis', 'estaria', 'estaríais', 'estaríamos', 'estarían', 'estarías', 'este',
-                'estemos', 'esto', 'estos', 'estoy', 'estuve', 'estuviera', 'estuvierais', 'estuvieran', 'estuvieras',
-                'estuvieron', 'estuviese', 'estuvieseis', 'estuviesen', 'estuvieses', 'estuvimos', 'estuviste', 'estuvisteis',
-                'estuvieramos', 'estuviesemos', 'estuvo', 'está', 'estábamos', 'estáis', 'están', 'estás', 'esté', 'estéis',
-                'estén', 'estés', 'fue', 'fuera', 'fuerais', 'fueran', 'fueras', 'fueron', 'fuese', 'fueseis', 'fuesen',
-                'fueses', 'fui', 'fuimos', 'fuiste', 'fuisteis', 'fuéramos', 'fuésemos', 'ha', 'habida', 'habidas', 'habido',
-                'habidos', 'habiendo', 'habremos', 'habrá', 'habrán', 'habrás', 'habré', 'habréis', 'habria', 'habría',
-                'habriais', 'habríais', 'habriamos', 'habríamos', 'habrian', 'habrían', 'habrias', 'habrías', 'habéis', 'había',
-                'habíais', 'habíamos', 'habían', 'habías', 'han', 'has', 'hasta', 'hay', 'haya', 'hayamos', 'hayan', 'hayas',
-                'hayáis', 'he', 'hemos', 'hubiera', 'hubierais', 'hubieran', 'hubieras', 'hubieron', 'hubiese', 'hubieseis',
-                'hubiesen', 'hubieses', 'hubimos', 'hubiste', 'hubisteis', 'hubiéramos', 'hubiésemos', 'hubo', 'la', 'las',
-                'le', 'les', 'lo', 'los', 'me', 'mi', 'mis', 'mucho', 'muchos', 'muy', 'más', 'nos', 'nosotras', 'nosotros',
-                'nuestra', 'nuestras', 'nuestro', 'nuestros', 'o', 'os', 'otra', 'otras', 'otro', 'otros', 'para', 'pero',
-                'poco', 'por', 'porque', 'que', 'quien', 'quienes', 'qué', 'se', 'sea', 'seamos', 'sean', 'seas', 'sentido',
-                'ser', 'seremos', 'será', 'serán', 'serás', 'seré', 'seréis', 'sería', 'seríais', 'seríamos', 'serían',
-                'serías', 'si', 'sido', 'siendo', 'siente', 'sin', 'sintiendo', 'sobre', 'sois', 'somos', 'son', 'soy',
-                'su', 'sus', 'suya', 'suyas', 'suyo', 'suyos', 'sí', 'también', 'tanto', 'te', 'tendremos', 'tendrá',
-                'tendrán', 'tendrás', 'tendré', 'tendréis', 'tendría', 'tendríais', 'tendríamos', 'tendrían', 'tendrías',
-                'tened', 'tenemos', 'tener', 'tenga', 'tengamos', 'tengan', 'tengas', 'tengo', 'tengáis', 'tenida', 'tenidas',
-                'tenido', 'tenidos', 'teniendo', 'tenéis', 'tenía', 'teníais', 'teníamos', 'tenían', 'tenías', 'ti', 'tiempo',
-                'tiene', 'tienen', 'tienes', 'todo', 'todos', 'tu', 'tus', 'tuve', 'tuviera', 'tuvierais', 'tuvieran',
-                'tuvieras', 'tuvieron', 'tuviese', 'tuvieseis', 'tuviesen', 'tuvieses', 'tuvimos', 'tuviste', 'tuvisteis',
-                'tuviéramos', 'tuviésemos', 'tuvo', 'tuya', 'tuyas', 'tuyo', 'tuyos', 'tú', 'un', 'una', 'uno', 'unos',
-                'vosostras', 'vosostros', 'vuestra', 'vuestras', 'vuestro', 'vuestros', 'y', 'ya', 'yo'
-            ]
-            wordcloud = WordCloud(stopwords=stopwords).generate(comentarios_concatenados)
-            
-            # Display the generated image
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis("off")
-            plt.show()
-            st.pyplot()
-        else:
-            st.write("Sin comentarios")
+        stopwords = [
+            'a', 'al', 'algo', 'algunas', 'algunos', 'ante', 'antes', 'como', 'con', 'contra', 'cual', 'cuales',
+            'cuando', 'de', 'del', 'desde', 'donde', 'durante', 'e', 'el', 'ella', 'ellas', 'ellos', 'en', 'entre',
+            'era', 'erais', 'eramos', 'eran', 'eras', 'eres', 'es', 'esa', 'esas', 'ese', 'eso', 'esos', 'esta', 'estaba',
+            'estabais', 'estaban', 'estabas', 'estamos', 'estan', 'estando', 'estar', 'estaremos', 'estara', 'estarán',
+            'estarás', 'estaré', 'estaréis', 'estaria', 'estaríais', 'estaríamos', 'estarían', 'estarías', 'este',
+            'estemos', 'esto', 'estos', 'estoy', 'estuve', 'estuviera', 'estuvierais', 'estuvieran', 'estuvieras',
+            'estuvieron', 'estuviese', 'estuvieseis', 'estuviesen', 'estuvieses', 'estuvimos', 'estuviste', 'estuvisteis',
+            'estuvieramos', 'estuviesemos', 'estuvo', 'está', 'estábamos', 'estáis', 'están', 'estás', 'esté', 'estéis',
+            'estén', 'estés', 'fue', 'fuera', 'fuerais', 'fueran', 'fueras', 'fueron', 'fuese', 'fueseis', 'fuesen',
+            'fueses', 'fui', 'fuimos', 'fuiste', 'fuisteis', 'fuéramos', 'fuésemos', 'ha', 'habida', 'habidas', 'habido',
+            'habidos', 'habiendo', 'habremos', 'habrá', 'habrán', 'habrás', 'habré', 'habréis', 'habria', 'habría',
+            'habriais', 'habríais', 'habriamos', 'habríamos', 'habrian', 'habrían', 'habrias', 'habrías', 'habéis', 'había',
+            'habíais', 'habíamos', 'habían', 'habías', 'han', 'has', 'hasta', 'hay', 'haya', 'hayamos', 'hayan', 'hayas',
+            'hayáis', 'he', 'hemos', 'hubiera', 'hubierais', 'hubieran', 'hubieras', 'hubieron', 'hubiese', 'hubieseis',
+            'hubiesen', 'hubieses', 'hubimos', 'hubiste', 'hubisteis', 'hubiéramos', 'hubiésemos', 'hubo', 'la', 'las',
+            'le', 'les', 'lo', 'los', 'me', 'mi', 'mis', 'mucho', 'muchos', 'muy', 'más', 'nos', 'nosotras', 'nosotros',
+            'nuestra', 'nuestras', 'nuestro', 'nuestros', 'o', 'os', 'otra', 'otras', 'otro', 'otros', 'para', 'pero',
+            'poco', 'por', 'porque', 'que', 'quien', 'quienes', 'qué', 'se', 'sea', 'seamos', 'sean', 'seas', 'sentido',
+            'ser', 'seremos', 'será', 'serán', 'serás', 'seré', 'seréis', 'sería', 'seríais', 'seríamos', 'serían',
+            'serías', 'si', 'sido', 'siendo', 'siente', 'sin', 'sintiendo', 'sobre', 'sois', 'somos', 'son', 'soy',
+            'su', 'sus', 'suya', 'suyas', 'suyo', 'suyos', 'sí', 'también', 'tanto', 'te', 'tendremos', 'tendrá',
+            'tendrán', 'tendrás', 'tendré', 'tendréis', 'tendría', 'tendríais', 'tendríamos', 'tendrían', 'tendrías',
+            'tened', 'tenemos', 'tener', 'tenga', 'tengamos', 'tengan', 'tengas', 'tengo', 'tengáis', 'tenida', 'tenidas',
+            'tenido', 'tenidos', 'teniendo', 'tenéis', 'tenía', 'teníais', 'teníamos', 'tenían', 'tenías', 'ti', 'tiempo',
+            'tiene', 'tienen', 'tienes', 'todo', 'todos', 'tu', 'tus', 'tuve', 'tuviera', 'tuvierais', 'tuvieran',
+            'tuvieras', 'tuvieron', 'tuviese', 'tuvieseis', 'tuviesen', 'tuvieses', 'tuvimos', 'tuviste', 'tuvisteis',
+            'tuviéramos', 'tuviésemos', 'tuvo', 'tuya', 'tuyas', 'tuyo', 'tuyos', 'tú', 'un', 'una', 'uno', 'unos',
+            'vosostras', 'vosostros', 'vuestra', 'vuestras', 'vuestro', 'vuestros', 'y', 'ya', 'yo'
+        ]
+        wordcloud = WordCloud(stopwords=stopwords).generate(comentarios_concatenados)
+        
+        # Display the generated image
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
+        st.pyplot()
     else:
         st.write("Sin comentarios")
 
