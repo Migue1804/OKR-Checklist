@@ -123,8 +123,50 @@ def evaluate_okr(objective, key_results, okr_questions):
     st.write(df)
 
 def is_positive(comentario):
-    palabras_positivas = ["bien", "excelente", "mejorar", "satisfactorio"]
-    palabras_negativas = ["problema", "deficiencia", "insatisfactorio", "error"]
+    # Palabras positivas
+    palabras_positivas = [
+        "bien", "excelente", "mejorar", "satisfactorio", "éxito", "logro", "bueno", "genial", "positivo", "afortunado",
+        "brillante", "exitoso", "increíble", "fantástico", "increíble", "maravilloso", "productivo", "aprobado", "triunfo",
+        "favorable", "perfecto", "eficiente", "avance", "progreso", "aplauso", "mejorado", "esperanzador", "innovador",
+        "crecimiento", "ganador", "beneficioso", "estupendo", "valioso", "acertado", "óptimo", "ventajoso", "construir",
+        "positivamente", "útil", "correcto", "agradable", "bravo", "excelencia", "logrado", "fortaleza", "victorioso",
+        "prometedor", "felicidad", "prosperidad", "éxito", "bendecido", "triunfante", "confiable", "sobresaliente",
+        "agradecido", "genio", "sabio", "asombroso", "favorito", "prosperidad", "virtuoso", "estrella", "notable",
+        "exaltado", "saludable", "hábil", "sólido", "triunfante", "logrado", "gloria", "admirable", "admirado",
+        "extraordinario", "impresionante", "especial", "luminoso", "vibrante", "sabio", "espléndido", "fenomenal",
+        "alegre", "sofisticado", "excelencia", "grandioso", "brillante", "positividad", "afortunado", "deseable",
+        "favorable", "optimista", "esperanzador", "valioso", "alegría", "éxito", "progreso", "risueño", "visionario",
+        "visionario", "esperanza", "logro", "exaltación", "vitalidad", "logro", "entusiasmo", "triunfo", "florecimiento",
+        "creativo", "estimulante", "motivador", "inspirador", "positivismo", "iluminado", "satisfacción", "gozo",
+        "excitación", "emocionante", "felicidad", "gratitud", "buenaventura", "victoria", "sonriente", "hermoso",
+        "alentador", "exitoso", "afortunado", "valiente", "firme", "sincero", "cálido", "digno", "notable", "estimado",
+        "optimista", "júbilo", "apasionado", "empoderado", "compasivo", "enriquecedor", "visionario", "poderoso",
+        "transformador", "conmovedor", "trascendente", "radiante", "resplandeciente", "alentador", "inquebrantable",
+        "armonioso", "celestial", "triunfal", "intachable", "glorioso", "triunfante"
+    ]
+    
+    # Palabras negativas
+    palabras_negativas = [
+        "problema", "deficiencia", "insatisfactorio", "error", "falla", "preocupación", "fracaso", "pobre", "desafío",
+        "crisis", "problema", "débil", "insuficiente", "inadecuado", "negativo", "inaceptable", "peligro", "lamentable",
+        "peligroso", "ineficaz", "inferior", "dañino", "decepción", "malo", "horrible", "insatisfactorio", "fracaso",
+        "ineficiente", "desafortunado", "conflicto", "defecto", "limitación", "fallo", "deficiente", "desastroso",
+        "decepcionante", "incompetente", "debilidad", "dañado", "inapropiado", "negativo", "falta", "atroz", "injusto",
+        "incapaz", "miserable", "perjudicial", "trágico", "oscuro", "horroroso", "triste", "desesperado", "abrumador",
+        "amenaza", "desgracia", "atroz", "aterrador", "horrible", "pésimo", "atroz", "tristeza", "pena", "desesperación",
+        "inaceptable", "amargura", "impotente", "ruinoso", "aborrecible", "lamentable", "inútil", "desalentador",
+        "agonizante", "despiadado", "peligroso", "sin esperanza", "agonía", "lamentable", "doloroso", "tenebroso",
+        "enfermedad", "desolador", "devastador", "siniestro", "lúgubre", "malo", "amargo", "desgarrador", "penoso",
+        "aterrador", "estremecedor", "lamentoso", "tormentoso", "caótico", "desalentador", "angustiante", "catastrófico",
+        "oscuro", "traumático", "desastroso", "débil", "perdido", "inútil", "sombrio", "insoportable", "fatal", "miseria",
+        "agonía", "lamentable", "pavoroso", "lamentoso", "tormentoso", "angustiante", "inquietante", "inseguro",
+        "amargado", "desolado", "infeliz", "temible", "repulsivo", "atroz", "traumático", "lamentoso", "patético",
+        "siniestro", "oscuro", "turbulento", "desesperanzador", "pésimo", "desgarrador", "pesadilla", "inquietante",
+        "deprimente", "funesto", "miserable", "inestable", "desalentador", "sombrío", "agonizante", "despiadado",
+        "trágico", "atroz", "abominable", "maldito", "ruinoso", "insoportable", "desgarrador", "agonizante", "penoso",
+        "lamentable", "insoportable", "sin salida", "impotente", "indeseable", "deshonesto", "inaceptable"
+    ]
+
     
     for palabra in palabras_positivas:
         if palabra in comentario.lower():
