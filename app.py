@@ -104,31 +104,8 @@ def evaluate_okr(objective, key_results, okr_questions):
 
     # Verificar si hay comentarios adicionales ingresados
     if len(comentarios_adicionales) > 0:
-        # Crear y generar la imagen del WordCloud
-        stopwords = [
-            "a", "al", "ante", "bajo", "cabe", "con", "contra", "de", "del", "desde", "durante", "e", "el", "ella",
-            "ellas", "ellos", "en", "entre", "es", "esa", "esas", "ese", "eso", "esos", "esta", "estas", "este", "esto",
-            "estos", "ha", "hasta", "le", "les", "lo", "los", "me", "mi", "mis", "ni", "no", "nos", "nosotros", "nuestra",
-            "nuestras", "nuestro", "nuestros", "o", "os", "para", "pero", "por", "que", "se", "si", "su", "sus", "te", "tu",
-            "tus", "un", "una", "unas", "uno", "unos", "y", "ya", "yo", "él", "éramos", "eran", "eres", "es", "fue", "fuimos",
-            "fueron", "será", "seremos", "serán", "sería", "serías", "seríamos", "serían", "soy", "eres", "es", "somos",
-            "sois", "son", "estaré", "estarás", "estará", "estaremos", "estaréis", "estarán", "estaría", "estarías", "estaríamos",
-            "estarían", "estaba", "estabas", "estábamos", "estabais", "estaban", "estuve", "estuviste", "estuvo", "estuvimos",
-            "estuvisteis", "estuvieron", "estuviera", "estuvieras", "estuviéramos", "estuvierais", "estuvieran", "estuviese",
-            "estuvieses", "estuviésemos", "estuvieseis", "estuviesen", "estando", "estado", "estada", "estados", "estadas",
-            "estad", "he", "has", "ha", "hemos", "habéis", "han", "haya", "hayas", "hayamos", "hayáis", "hayan", "habré",
-            "habrás", "habrá", "habremos", "habréis", "habrán", "habría", "habrías", "habríamos", "habríais", "habrían",
-            "había", "habías", "habíamos", "habíais", "habían", "hube", "hubiste", "hubo", "hubimos", "hubisteis", "hubieron",
-            "hubiera", "hubieras", "hubiéramos", "hubierais", "hubieran", "hubiese", "hubieses", "hubiésemos", "hubieseis",
-            "hubiesen", "habiendo", "habido", "habida", "habidos", "habidas", "soy", "eres", "es", "somos", "sois", "son",
-            "sea", "seas", "seamos", "seáis", "sean", "fui", "fuiste", "fue", "fuimos", "fuisteis", "fueron", "fuera",
-            "fueras", "fuéramos", "fuerais", "fueran", "fuese", "fueses", "fuésemos", "fueseis", "fuesen", "siendo",
-            "sido", "tengo", "tienes", "tiene", "tenemos", "tenéis", "tienen", "tenga", "tengas", "tengamos", "tengáis",
-            "tengan", "tenía", "tenías", "teníamos", "teníais", "tenían", "tuve", "tuviste", "tuvo", "tuvimos", "tuvisteis",
-            "tuvieron", "tuviera", "tuvieras", "tuviéramos", "tuvierais", "tuvieran", "tuviese", "tuvieses", "tuviésemos",
-            "tuvieseis", "tuviesen", "teniendo", "tenido", "tenida", "tenidos", "tenidas", "tened"
-        ]
-        wordcloud = WordCloud(stopwords=stopwords).generate(comentarios_adicionales)
+        # Create and generate a word cloud image
+        wordcloud = WordCloud().generate(comentarios_adicionales)
         
         # Display the generated image
         plt.imshow(wordcloud, interpolation='bilinear')
