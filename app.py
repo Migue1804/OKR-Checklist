@@ -90,71 +90,111 @@ def evaluate_okr(objective, key_results, okr_questions):
 
     # Reset index and rename index column
     df = df.reset_index().rename(columns={'index': 'Criterio de Evaluación'})
+    df = df[['Objetivo', 'Resultados Clave', 'Criterio de Evaluación','Respuesta']]
+    # Create a new DataFrame 'Criterio de Evaluación' column for rows containing the word 'Comentario'
+    df_filtrado = df[df['Criterio de Evaluación'].str.contains('Comentario')]
 
-    # Save DataFrame to CSV
-    csv = df.to_csv(index=False)
-    st.download_button(
-        label="Descargar resultados de la evaluación como CSV",
-        data=io.BytesIO(csv.encode()),
-        file_name="evaluacion_okr.csv",
-        mime="text/csv",
-    )
+    # Filter the 'Respuesta' column for non-empty rows
+    variable_respuesta = df_filtrado[df_filtrado['Respuesta'].str.strip() != '']['Respuesta']
 
-def plot_results(okr_pass):
-    pass_rate = sum(okr_pass) / len(okr_pass) * 100
-    plt.figure(figsize=(6, 4))
-    plt.bar(["Pass", "Fail"], [pass_rate, 100 - pass_rate], color=['green', 'red'])
-    plt.title("Pass Rate")
-    plt.xlabel("Result")
-    plt.ylabel("Percentage")
-    st.pyplot()
+    # Concatenate non-empty responses separated by commas into a new variable
+    comentarios_adicionales = ', '.join(variable_respuesta)
+    st.write("Comentarios adicionales:")
+    #st.write(comentarios_adicionales)
 
-def generate_wordcloud(comentarios):
-    if comentarios:
-        comentarios_concatenados = ' '.join(comentarios)
-        if comentarios_concatenados.strip():  # Verificar si la cadena no está vacía
-            wordcloud = WordCloud().generate(comentarios_concatenados)
-            
-            # Mostrar la imagen generada
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis("off")
-            plt.show()
-            st.pyplot()
-        else:
-            st.write("Sin comentarios")
+    # Verificar si hay comentarios adicionales ingresados
+    if len(comentarios_adicionales) > 0:
+        # Crear y generar la imagen del WordCloud
+        stopwords = [
+            "a", "al", "ante", "bajo", "cabe", "con", "contra", "de", "del", "desde", "durante", "e", "el", "ella",
+            "ellas", "ellos", "en", "entre", "es", "esa", "esas", "ese", "eso", "esos", "esta", "estas", "este", "esto",
+            "estos", "ha", "hasta", "le", "les", "lo", "los", "me", "mi", "mis", "ni", "no", "nos", "nosotros", "nuestra",
+            "nuestras", "nuestro", "nuestros", "o", "os", "para", "pero", "por", "que", "se", "si", "su", "sus", "te", "tu",
+            "tus", "un", "una", "unas", "uno", "unos", "y", "ya", "yo", "él", "éramos", "eran", "eres", "es", "fue", "fuimos",
+            "fueron", "será", "seremos", "serán", "sería", "serías", "seríamos", "serían", "soy", "eres", "es", "somos",
+            "sois", "son", "estaré", "estarás", "estará", "estaremos", "estaréis", "estarán", "estaría", "estarías", "estaríamos",
+            "estarían", "estaba", "estabas", "estábamos", "estabais", "estaban", "estuve", "estuviste", "estuvo", "estuvimos",
+            "estuvisteis", "estuvieron", "estuviera", "estuvieras", "estuviéramos", "estuvierais", "estuvieran", "estuviese",
+            "estuvieses", "estuviésemos", "estuvieseis", "estuviesen", "estando", "estado", "estada", "estados", "estadas",
+            "estad", "he", "has", "ha", "hemos", "habéis", "han", "haya", "hayas", "hayamos", "hayáis", "hayan", "habré",
+            "habrás", "habrá", "habremos", "habréis", "habrán", "habría", "habrías", "habríamos", "habríais", "habrían",
+            "había", "habías", "habíamos", "habíais", "habían", "hube", "hubiste", "hubo", "hubimos", "hubisteis", "hubieron",
+            "hubiera", "hubieras", "hubiéramos", "hubierais", "hubieran", "hubiese", "hubieses", "hubiésemos", "hubieseis",
+            "hubiesen", "habiendo", "habido", "habida", "habidos", "habidas", "soy", "eres", "es", "somos", "sois", "son",
+            "sea", "seas", "seamos", "seáis", "sean", "fui", "fuiste", "fue", "fuimos", "fuisteis", "fueron", "fuera",
+            "fueras", "fuéramos", "fuerais", "fueran", "fuese", "fueses", "fuésemos", "fueseis", "fuesen", "siendo",
+            "sido", "tengo", "tienes", "tiene", "tenemos", "tenéis", "tienen", "tenga", "tengas", "tengamos", "tengáis",
+            "tengan", "tenía", "tenías", "teníamos", "teníais", "tenían", "tuve", "tuviste", "tuvo", "tuvimos", "tuvisteis",
+            "tuvieron", "tuviera", "tuvieras", "tuviéramos", "tuvierais", "tuvieran", "tuviese", "tuvieses", "tuviésemos",
+            "tuvieseis", "tuviesen", "teniendo", "tenido", "tenida", "tenidos", "tenidas", "tened"
+        ]
+        wordcloud = WordCloud(stopwords=stopwords).generate(comentarios_adicionales)
+        
+        # Display the generated image
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
+        st.pyplot()
     else:
         st.write("Sin comentarios")
 
-def main():
-    st.title("Evaluación de OKR")
-    st.write("Esta aplicación te permite evaluar la calidad de un OKR (Objetivo y Resultados Clave) proporcionado.")
+    # Descargar DataFrame como Excel
+    def download_excel():
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='OKR_evaluation')
+        output.seek(0)
+        return output
 
-    # Obtener datos del usuario
-    objective = st.text_input("Por favor, ingresa el objetivo:")
-    key_results = st.text_input("Por favor, ingresa los resultados clave (separados por comas):")
+    excel_data = download_excel()
+    st.download_button(label="Descargar DataFrame como Excel", data=excel_data, file_name='OKR_evaluation.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', help="Haz clic para descargar el DataFrame como un archivo Excel")
+
+    st.write("DataFrame:")
+    st.write(df)
+
+def plot_results(okr_pass):
+    # Contar el número de puntos que cumplen y no cumplen
+    num_pass = sum(okr_pass)
+    num_fail = len(okr_pass) - num_pass
+
+    # Configurar datos para el gráfico
+    labels = ['Cumple', 'No Cumple']
+    sizes = [num_pass, num_fail]
+    colors = ['#2ecc71', '#e74c3c']
+
+    # Crear el gráfico de donas
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')  # Asegurar que el gráfico sea un círculo
+
+    # Mostrar el gráfico
+    st.pyplot(fig)
+
+def main():
+    # Agregar una imagen en la parte superior
+    st.image("app.jpg", width=700)  # Reemplaza "app.jpg" con la ruta de tu imagen y ajusta el ancho según sea necesario
+    st.title("App de Evaluación de OKRs")
+    # Interfaz para ingresar el objetivo y los resultados clave
+    objective = st.text_input("Objetivo:")
+    key_results = st.text_area("Resultados Clave:")
+
+    # Preguntas para la evaluación del OKR
     okr_questions = [
-        "Objetivo - Claramente Definido",
-        "Objetivo - Ambicioso",
-        "Objetivo - Relevante",
-        "Objetivo - Comprensible",
-        "Resultados Clave - Específicos",
-        "Resultados Clave - Progreso Claro",
-        "Resultados Clave - Realistas",
-        "Resultados Clave - Relevantes",
-        "OKRs - Desglosados",
-        "OKRs - Alineados",
-        "OKRs - Coherentes"
+        "¿El objetivo está claramente definido y alineado con la visión estratégica de la organización?",
+        "¿El objetivo es ambicioso pero alcanzable?",
+        "¿El objetivo es relevante y significativo para el éxito de la organización?",
+        "¿El objetivo es comprensible y motivador para los equipos?",
+        "¿Los resultados clave son específicos y medibles?",
+        "¿Los resultados clave proporcionan una indicación clara de progreso hacia el logro del objetivo?",
+        "¿Los resultados clave son realistas y factibles dentro del marco de tiempo establecido?",
+        "¿Los resultados clave son relevantes para el objetivo y contribuyen significativamente a su logro?",
+        "¿El OKR está desglosado en OKRs específicos y medibles para cada equipo o departamento?",
+        "¿Los OKRs de los equipos están alineados con los objetivos estratégicos de nivel superior?",
+        "¿Existe coherencia y consistencia en la cascada de OKRs a través de la organización?"
     ]
 
-    # Evaluar OKR
+    # Evaluar el OKR
     evaluate_okr(objective, key_results, okr_questions)
-
-    # Recolectar comentarios
-    st.write("Por favor, proporciona comentarios adicionales sobre el OKR:")
-    comentarios = st.text_area("Comentarios:", height=100)
-
-    # Generar WordCloud de comentarios
-    generate_wordcloud(comentarios.split())
-
+    
 if __name__ == "__main__":
     main()
